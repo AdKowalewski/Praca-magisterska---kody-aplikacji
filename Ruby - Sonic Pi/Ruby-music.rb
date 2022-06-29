@@ -50,7 +50,7 @@ def parseTxt(filepath, synth)
       #ustawienie tempa
       if parameters[0] == "T"
         if parameters[1].to_i < 0
-          puts "Tempo must be greater than 0!"
+          print "Tempo in line #{k} must be greater than 0!"
           break
         else
           use_bpm parameters[1].to_i
@@ -97,7 +97,7 @@ def parseTxt(filepath, synth)
             end
           end
         else
-          puts "Fragment of such title does not exist!"
+          print "Fragment of title #{parameters[1]} in line #{k} does not exist!"
           break
         end
       end

@@ -72,7 +72,7 @@ def parseTxt(instrument, filepath):
          #ustawienie tempa
          if parameters[0] == "T":
             if int(parameters[1]) < 0:
-               print("Tempo must be greater than 0!")
+               print("Tempo in line {} must be greater than 0!".format(k))
                break
             else:
                temposList.append(int(parameters[1]))
@@ -115,7 +115,7 @@ def parseTxt(instrument, filepath):
          #wywołanie fragmentu
          if parameters[0] == "Call":
             if parameters[1] not in dictOfFragmentPitches.values() or parameters[1] not in dictOfFragmentDurations.values():
-               print("Fragment of such title does not exist!")
+               print("Fragment of title {} in line {} does not exist!".format(parameters[1], k))
                break
             else:
                pitches.extend(dictOfFragmentPitches[parameters[1]])

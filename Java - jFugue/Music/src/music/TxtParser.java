@@ -85,7 +85,7 @@ public class TxtParser {
                 // ustawienie tempa
                 if (parameters[0].equals("T")) {
                     if (Integer.parseInt(parameters[1]) < 0) {
-                        System.out.println("Tempo must be greater than 0!");
+                        System.out.printf("Tempo in line %d must be greater than 0!\n", k);
                         break;
                     } else {
                         newElement = parameters[0] + parameters[1] + " ";
@@ -117,7 +117,7 @@ public class TxtParser {
                 // wywołanie fragmentu
                 if (parameters[0].equals("Call")) {
                     if (!mapOfFragments.containsKey(parameters[1])) {
-                        System.out.println("Fragment of such title does not exist!");
+                        System.out.printf("Fragment of title %s in line %d does not exist!\n", parameters[1], k);
                         break;
                     } else {
                         pattern += mapOfFragments.get(parameters[1]);
@@ -125,7 +125,7 @@ public class TxtParser {
                 }
             } else if(parameters.length == 3) {
                 if (!Arrays.asList(noteLetters).contains(parameters[0]) || !Arrays.asList(octaves).contains(parameters[1])) {
-                    System.out.println("Such note does not exist!");
+                    System.out.printf("Note in line %d does not exist!\n", k);
                     break;
                 } else {
                     // dodawanie nowej nuty
