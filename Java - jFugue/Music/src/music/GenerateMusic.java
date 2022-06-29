@@ -44,8 +44,7 @@ public class GenerateMusic {
                 v = voice;
             }
             // stworzenie nowej ścieżki dźwiękowej
-            //   Pattern pattern = melody(args[0], v, instr);
-            Pattern pattern = melody("C:/Users/adkow/Desktop/bladblad.txt", v, instr);
+            Pattern pattern = melody(args[0], v, instr);
             // ewentualnie można podać:
             // Pattern pattern =
             //  melody("<sciezka_dostepu_do_pliku>", v, instr);
