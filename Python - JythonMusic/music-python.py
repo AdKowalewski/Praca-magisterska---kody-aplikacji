@@ -64,24 +64,29 @@ def parseTxt(instrument, filepath):
       if line[0] == "#":
          continue
       if line[0] == ".":
-         continue
+         print("End of the song")
+         break
       #podział linii względem ","
       parameters = line.split(",")
       if len(parameters) == 2:
          #ustawienie tempa
          if parameters[0] == "T":
-            temposList.append(int(parameters[1]))
-            if len(temposList) < 2:
-               phrase.setTempo(temposList[len(temposList)-1])  
-            if len(temposList) >= 2:
-               phrase.addNoteList(pitches, durations)
-               endTime = phrase.getEndTime()
-               phraseList.append(phrase)
-               phrase = Phrase(temposList[len(temposList)-1]*endTime/temposList[len(temposList)-2])
-               phrase.setInstrument(instrument)
-               phrase.setTempo(temposList[len(temposList)-1])
-               pitches = []
-               durations = []
+            if int(parameters[1]) < 0:
+               print("Tempo must be greater than 0!")
+               break
+            else:
+               temposList.append(int(parameters[1]))
+               if len(temposList) < 2:
+                  phrase.setTempo(temposList[len(temposList)-1])  
+               if len(temposList) >= 2:
+                  phrase.addNoteList(pitches, durations)
+                  endTime = phrase.getEndTime()
+                  phraseList.append(phrase)
+                  phrase = Phrase(temposList[len(temposList)-1]*endTime/temposList[len(temposList)-2])
+                  phrase.setInstrument(instrument)
+                  phrase.setTempo(temposList[len(temposList)-1])
+                  pitches = []
+                  durations = []
          #dodanie pauzy
          if parameters[0] == "R":
             pitches.append(REST)
@@ -109,8 +114,12 @@ def parseTxt(instrument, filepath):
             fragmentDurations = []
          #wywołanie fragmentu
          if parameters[0] == "Call":
-            pitches.extend(dictOfFragmentPitches[parameters[1]])
-            durations.extend(dictOfFragmentDurations[parameters[1]])
+            if parameters[1] not in dictOfFragmentPitches.values() or parameters[1] not in dictOfFragmentDurations.values():
+               print("Fragment of such title does not exist!")
+               break
+            else:
+               pitches.extend(dictOfFragmentPitches[parameters[1]])
+               durations.extend(dictOfFragmentDurations[parameters[1]])
       #dodanie nowej nuty
       elif len(parameters) == 3:
          for n in noteLetters:
@@ -138,6 +147,16 @@ def parseTxt(instrument, filepath):
 
 phraseList = parseTxt(int(sys.argv[1]), sys.argv[2])
 #phraseList = parseTxt('sciezka_dostepu_do_pliku', 0)
+#w przypadku większej ilości plików:
+#
+#phraseList1 = parseTxt('plik1', 0)
+#phraseList2 = parseTxt('plik2', 0)
+#
+#part = Part()
+#for p in phraseList1:
+#   part.addPhrase(p)
+#for p in phraseList2:
+#   part.addPhrase(p)
 
 part = Part()
 for p in phraseList:

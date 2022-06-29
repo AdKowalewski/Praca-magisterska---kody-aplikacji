@@ -1,8 +1,8 @@
 #tablica symboli nut
 noteLetters = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"]
-#tablica numerÛw oktaw
+#tablica numer√≥w oktaw
 octaves = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-#s≥ownik d≥ugoúci nut
+#s≈Çownik d≈Çugo≈õci nut
 durationsDict = {
   "1\n" => 4,
   "1/2\n" => 2,
@@ -12,18 +12,18 @@ durationsDict = {
   "1/32\n" => 0.125
 }
 
-#funkcja do tworzenia úcieøki muzycznej na podstawie
+#funkcja do tworzenia ≈õcie≈ºki muzycznej na podstawie
 #pliku z zapisem muzycznym oraz instrumentu
 def parseTxt(filepath, synth)
   #ustawienie instrumentu
   use_synth synth
-  #s≥ownik fragmentÛw
+  #s≈Çownik fragment√≥w
   fragmentDict = {}
-  #bigList (znaczenie wyjaúniono w rozdziale 5)
+  #bigList (znaczenie wyja≈õniono w rozdziale 5)
   bigList = []
-  #smallList (znaczenie wyjaúniono w rozdziale 5)
+  #smallList (znaczenie wyja≈õniono w rozdziale 5)
   smallList = []
-  #stan, czy zapamiÍtywany jest fragment
+  #stan, czy zapamiƒôtywany jest fragment
   isFragment = 0
   #nazwa fragmentu
   fragmentTitle = ""
@@ -35,20 +35,26 @@ def parseTxt(filepath, synth)
   f.each_line { |line|
     #inkrementacja iteratora
     k = k + 1
-    #ignorowanie linii, jeúli napotkano
+    #ignorowanie linii, je≈õli napotkano
     #znak "#" lub "."
     if line[0] == "#"
       next
     end
     if line[0] == "."
-      next
+      puts "End of the song"
+      break
     end
-    #podzia≥ linii wzglÍdem ","
+    #podzia≈Ç linii wzglƒôdem ","
     parameters = line.split(",")
     if parameters.length() == 2
       #ustawienie tempa
       if parameters[0] == "T"
-        use_bpm parameters[1].to_i
+        if parameters[1].to_i < 0
+          puts "Tempo must be greater than 0!"
+          break
+        else
+          use_bpm parameters[1].to_i
+        end
       end
       #dodanie pauzy
       if parameters[0] == "R"
@@ -64,12 +70,12 @@ def parseTxt(filepath, synth)
           end
         end
       end
-      #rozpoczÍcie zapamiÍtywania fragmentu
+      #rozpoczƒôcie zapamiƒôtywania fragmentu
       if parameters[0] == "Fragment"
         isFragment = 1
         fragmentTitle = parameters[1]
       end
-      #zakoÒczenie zapamiÍtywania fragmentu
+      #zako≈Ñczenie zapamiƒôtywania fragmentu
       if parameters[0] == "End"
         isFragment = 0
         if parameters[1] == fragmentTitle
@@ -79,20 +85,25 @@ def parseTxt(filepath, synth)
         bigList = []
         smallList = []
       end
-      #wywo≥anie fragmentu
+      #wywo≈Çanie fragmentu
       if parameters[0] == "Call"
-        fragmentDict[parameters[1]].each do |item|
-          if item[0] == "Play"
-            play item[1], release: 4
+        if fragmentDict.has_value?(parameters[1])
+          fragmentDict[parameters[1]].each do |item|
+            if item[0] == "Play"
+              play item[1], release: 4
+            end
+            if item[0] == "Sleep"
+              sleep item[1]
+            end
           end
-          if item[0] == "Sleep"
-            sleep item[1]
-          end
+        else
+          puts "Fragment of such title does not exist!"
+          break
         end
       end
     elsif parameters.length() == 3
       #dodawanie nowej nuty (oraz pauzy potrzebnej
-      #na wybrzmienie düwiÍku)
+      #na wybrzmienie d≈∫wiƒôku)
       noteLetters.each do |n|
         if parameters[0] == n
           octaves.each do |o|
@@ -127,4 +138,8 @@ def parseTxt(filepath, synth)
   f.close
 end
 
-Thread.new {parseTxt 'sciezka_dostepu_do_pliku', :piano}
+in_thread do
+  parseTxt 'sciezka_dostepu_do_pliku', :piano}
+end
+#W przypadku wiƒôkszej ilo≈õci plik√≥w, do ka≈ºdego z nich
+#nale≈ºy zastosowaƒá odpowiedniƒÖ ilo≈õƒá blok√≥w "in_thread"

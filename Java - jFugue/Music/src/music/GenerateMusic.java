@@ -3,7 +3,6 @@ package music;
 import org.jfugue.midi.MidiFileManager;
 import org.jfugue.pattern.Pattern;
 import org.jfugue.player.Player;
-import org.jfugue.theory.Note;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,7 +44,8 @@ public class GenerateMusic {
                 v = voice;
             }
             // stworzenie nowej ścieżki dźwiękowej
-            Pattern pattern = melody(args[0], v, instr);
+            //   Pattern pattern = melody(args[0], v, instr);
+            Pattern pattern = melody("C:/Users/adkow/Desktop/bladblad.txt", v, instr);
             // ewentualnie można podać:
             // Pattern pattern =
             //  melody("<sciezka_dostepu_do_pliku>", v, instr);
@@ -57,7 +57,7 @@ public class GenerateMusic {
 
             player.play(pattern); // odtworzenie ścieżki
             // zapis do pliku MIDI
-            MidiFileManager.savePatternToMidi(pattern, new File("C:\\Users\\adkow\\Desktop\\koleda.mid"));
+            MidiFileManager.savePatternToMidi(pattern, new File("sciezka_do_katalogu"));
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (ArrayIndexOutOfBoundsException ex) {
