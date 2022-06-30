@@ -82,11 +82,6 @@ public class TxtParser {
             String[] parameters = line.split("[,]");
 
             if(parameters.length == 2) {
-                if (!parameters[0].equals("T") || !parameters[0].equals("R") || !parameters[0].equals("Fragment") ||
-                        !parameters[0].equals("End") || !parameters[0].equals("Call")) {
-                    System.out.printf("Incorrect first parameter in line %d!\n", k);
-                    break;
-                }
                 // ustawienie tempa
                 if (parameters[0].equals("T")) {
                     if (Integer.parseInt(parameters[1]) < 0) {
@@ -99,7 +94,7 @@ public class TxtParser {
                     }
                 }
                 // dodanie pauzy
-                if (parameters[0].equals("R")) {
+                else if (parameters[0].equals("R")) {
                     newElement = parameters[0];
                     pattern += newElement;
                     if(isFragment) fragment += newElement;
@@ -109,12 +104,12 @@ public class TxtParser {
                             fragment, isFragment)[1];
                 }
                 // rozpoczęcie zapamiętywania fragmentu
-                if (parameters[0].equals("Fragment")) {
+                else if (parameters[0].equals("Fragment")) {
                     isFragment = true;
                     titleOfFragment = parameters[1];
                 }
                 // zakończenie zapamiętywania fragmentu
-                if (parameters[0].equals("End")) {
+                else if (parameters[0].equals("End")) {
                     if (!parameters[1].equals(titleOfFragment)) {
                         System.out.printf("Incorrect fragment title in line %d!\n", k);
                         break;
@@ -125,20 +120,23 @@ public class TxtParser {
                     }
                 }
                 // wywołanie fragmentu
-                if (parameters[0].equals("Call")) {
+                else if (parameters[0].equals("Call")) {
                     if (!mapOfFragments.containsKey(parameters[1])) {
                         System.out.printf("Fragment of title %s in line %d does not exist!\n", parameters[1], k);
                         break;
                     } else {
                         pattern += mapOfFragments.get(parameters[1]);
                     }
+                } else {
+                    System.out.printf("Incorrect first parameter in line %d!\n", k);
+                    break;
                 }
             } else if(parameters.length == 3) {
-                if (!parameters[2].equals("1") || !parameters[2].equals("1/2") || !parameters[2].equals("1/4") ||
-                        !parameters[2].equals("1/8") || !parameters[2].equals("1/16") || !parameters[2].equals("1/32")) {
+                if (!parameters[2].equals("1") && !parameters[2].equals("1/2") && !parameters[2].equals("1/4") &&
+                        !parameters[2].equals("1/8") && !parameters[2].equals("1/16") && !parameters[2].equals("1/32")) {
                     System.out.printf("Incorrect note length in line %d!\n", k);
                 }
-                if (!Arrays.asList(noteLetters).contains(parameters[0]) || !Arrays.asList(octaves).contains(parameters[1])) {
+                else if (!Arrays.asList(noteLetters).contains(parameters[0]) || !Arrays.asList(octaves).contains(parameters[1])) {
                     System.out.printf("Note in line %d does not exist!\n", k);
                     break;
                 } else {

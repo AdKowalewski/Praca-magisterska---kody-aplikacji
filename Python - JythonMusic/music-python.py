@@ -69,9 +69,6 @@ def parseTxt(instrument, filepath):
       #podział linii względem ","
       parameters = line.split(",")
       if len(parameters) == 2:
-         if parameters[0] != "T" or parameters[0] != "R" or parameters[0] != "Fragment" or parameters[0] != "End" or parameters[0] != "Call":
-            print("Incorrect first parameter in line {}!".format(k))
-            break
          #ustawienie tempa
          if parameters[0] == "T":
             if int(parameters[1]) < 0:
@@ -91,7 +88,7 @@ def parseTxt(instrument, filepath):
                   pitches = []
                   durations = []
          #dodanie pauzy
-         if parameters[0] == "R":
+         elif parameters[0] == "R":
             pitches.append(REST)
             if isFragment == 1:
                fragmentPitches.append(REST)
@@ -105,11 +102,11 @@ def parseTxt(instrument, filepath):
                   if isFragment == 1:
                      fragmentDurations.append(y)
          #rozpoczęcie zapamiętywania fragmentu
-         if parameters[0] == "Fragment":
+         elif parameters[0] == "Fragment":
             isFragment = 1
             titleOfFragment = parameters[1]
          #zakończenie zapamiętywania fragmentu
-         if parameters[0] == "End":
+         elif parameters[0] == "End":
             if parameters[1] != titleOfFragment:
                print("Incorrect fragment title in line {}!".format(k))
                break
@@ -120,13 +117,16 @@ def parseTxt(instrument, filepath):
                fragmentPitches = []
                fragmentDurations = []
          #wywołanie fragmentu
-         if parameters[0] == "Call":
+         elif parameters[0] == "Call":
             if parameters[1] not in dictOfFragmentPitches.values() or parameters[1] not in dictOfFragmentDurations.values():
                print("Fragment of title {} in line {} does not exist!".format(parameters[1], k))
                break
             else:
                pitches.extend(dictOfFragmentPitches[parameters[1]])
                durations.extend(dictOfFragmentDurations[parameters[1]])
+         else:
+            print("Incorrect first parameter in line {}!".format(k))
+            break
       #dodanie nowej nuty
       elif len(parameters) == 3:
          for n in noteLetters:

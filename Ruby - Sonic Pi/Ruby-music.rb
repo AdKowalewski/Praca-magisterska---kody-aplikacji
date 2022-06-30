@@ -47,10 +47,6 @@ def parseTxt(filepath, synth)
     #podział linii względem ","
     parameters = line.split(",")
     if parameters.length() == 2
-      if parameters[0] != "T" or parameters[0] != "R" or parameters[0] != "Fragment" or parameters[0] != "End" or parameters[0] != "Call"
-        print "Incorrect first parameter in line #{k}!"
-        break
-      end
       #ustawienie tempa
       if parameters[0] == "T"
         if parameters[1].to_i < 0
@@ -59,9 +55,8 @@ def parseTxt(filepath, synth)
         else
           use_bpm parameters[1].to_i
         end
-      end
       #dodanie pauzy
-      if parameters[0] == "R"
+      elsif parameters[0] == "R"
         durationsDict.each do |key, value|
           if line.end_with?(key)
             sleep value
@@ -73,14 +68,12 @@ def parseTxt(filepath, synth)
             end
           end
         end
-      end
       #rozpoczęcie zapamiętywania fragmentu
-      if parameters[0] == "Fragment"
+      elsif parameters[0] == "Fragment"
         isFragment = 1
         fragmentTitle = parameters[1]
-      end
       #zakończenie zapamiętywania fragmentu
-      if parameters[0] == "End"
+      elsif parameters[0] == "End"
         isFragment = 0
         if parameters[1] == fragmentTitle
           fragmentDict[fragmentTitle] = bigList
@@ -91,9 +84,8 @@ def parseTxt(filepath, synth)
         fragmentTitle = ""
         bigList = []
         smallList = []
-      end
       #wywołanie fragmentu
-      if parameters[0] == "Call"
+      elsif parameters[0] == "Call"
         if fragmentDict.has_value?(parameters[1])
           fragmentDict[parameters[1]].each do |item|
             if item[0] == "Play"
@@ -107,6 +99,9 @@ def parseTxt(filepath, synth)
           print "Fragment of title #{parameters[1]} in line #{k} does not exist!"
           break
         end
+      else
+        print "Incorrect first parameter in line #{k}!"
+        break
       end
     elsif parameters.length() == 3
       #dodawanie nowej nuty (oraz pauzy potrzebnej
