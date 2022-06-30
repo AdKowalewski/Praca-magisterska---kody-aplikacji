@@ -56,7 +56,7 @@ public class GenerateMusic {
 
             player.play(pattern); // odtworzenie ścieżki
             // zapis do pliku MIDI
-            MidiFileManager.savePatternToMidi(pattern, new File("sciezka_do_katalogu"));
+            MidiFileManager.savePatternToMidi(pattern, new File("sciezka_do_katalogu.midi"));
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (ArrayIndexOutOfBoundsException ex) {

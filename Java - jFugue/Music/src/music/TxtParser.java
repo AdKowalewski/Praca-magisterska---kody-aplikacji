@@ -82,6 +82,11 @@ public class TxtParser {
             String[] parameters = line.split("[,]");
 
             if(parameters.length == 2) {
+                if (!parameters[0].equals("T") || !parameters[0].equals("R") || !parameters[0].equals("Fragment") ||
+                        !parameters[0].equals("End") || !parameters[0].equals("Call")) {
+                    System.out.printf("Incorrect first parameter in line %d!\n", k);
+                    break;
+                }
                 // ustawienie tempa
                 if (parameters[0].equals("T")) {
                     if (Integer.parseInt(parameters[1]) < 0) {
@@ -110,9 +115,14 @@ public class TxtParser {
                 }
                 // zakończenie zapamiętywania fragmentu
                 if (parameters[0].equals("End")) {
-                    mapOfFragments.put(titleOfFragment, fragment);
-                    isFragment = false;
-                    fragment = "";
+                    if (!parameters[1].equals(titleOfFragment)) {
+                        System.out.printf("Incorrect fragment title in line %d!\n", k);
+                        break;
+                    } else {
+                        mapOfFragments.put(titleOfFragment, fragment);
+                        isFragment = false;
+                        fragment = "";
+                    }
                 }
                 // wywołanie fragmentu
                 if (parameters[0].equals("Call")) {
@@ -124,6 +134,10 @@ public class TxtParser {
                     }
                 }
             } else if(parameters.length == 3) {
+                if (!parameters[2].equals("1") || !parameters[2].equals("1/2") || !parameters[2].equals("1/4") ||
+                        !parameters[2].equals("1/8") || !parameters[2].equals("1/16") || !parameters[2].equals("1/32")) {
+                    System.out.printf("Incorrect note length in line %d!\n", k);
+                }
                 if (!Arrays.asList(noteLetters).contains(parameters[0]) || !Arrays.asList(octaves).contains(parameters[1])) {
                     System.out.printf("Note in line %d does not exist!\n", k);
                     break;
@@ -134,11 +148,14 @@ public class TxtParser {
                     if(isFragment) fragment += newElement;
                     pattern = addNoteLength(pattern, parameters[2],
                             fragment, isFragment)[0];
-                    fragment = addNoteLength(pattern, parameters[2],
-                            fragment, isFragment)[1];
+                    if (isFragment) {
+                        fragment = addNoteLength(pattern, parameters[2],
+                                fragment, isFragment)[1];
+                    }
                 }
             } else {
                 System.out.printf("Invalid number of parameters in line %d!\n", k);
+                break;
             }
         }
         k = 0;

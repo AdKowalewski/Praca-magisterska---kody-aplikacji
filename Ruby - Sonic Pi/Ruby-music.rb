@@ -47,6 +47,10 @@ def parseTxt(filepath, synth)
     #podział linii względem ","
     parameters = line.split(",")
     if parameters.length() == 2
+      if parameters[0] != "T" or parameters[0] != "R" or parameters[0] != "Fragment" or parameters[0] != "End" or parameters[0] != "Call"
+        print "Incorrect first parameter in line #{k}!"
+        break
+      end
       #ustawienie tempa
       if parameters[0] == "T"
         if parameters[1].to_i < 0
@@ -80,6 +84,9 @@ def parseTxt(filepath, synth)
         isFragment = 0
         if parameters[1] == fragmentTitle
           fragmentDict[fragmentTitle] = bigList
+        else
+          print "Incorrect fragment title in line #{k}!"
+          break
         end
         fragmentTitle = ""
         bigList = []
@@ -132,6 +139,7 @@ def parseTxt(filepath, synth)
       end
     else
       print "Invalid number of parameters in line #{k}!"
+      break
     end
   }
   k = 0

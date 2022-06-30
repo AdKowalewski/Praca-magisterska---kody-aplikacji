@@ -69,6 +69,9 @@ def parseTxt(instrument, filepath):
       #podział linii względem ","
       parameters = line.split(",")
       if len(parameters) == 2:
+         if parameters[0] != "T" or parameters[0] != "R" or parameters[0] != "Fragment" or parameters[0] != "End" or parameters[0] != "Call":
+            print("Incorrect first parameter in line {}!".format(k))
+            break
          #ustawienie tempa
          if parameters[0] == "T":
             if int(parameters[1]) < 0:
@@ -107,11 +110,15 @@ def parseTxt(instrument, filepath):
             titleOfFragment = parameters[1]
          #zakończenie zapamiętywania fragmentu
          if parameters[0] == "End":
-            dictOfFragmentPitches[titleOfFragment] = fragmentPitches
-            dictOfFragmentDurations[titleOfFragment] = fragmentDurations
-            isFragment = 0
-            fragmentPitches = []
-            fragmentDurations = []
+            if parameters[1] != titleOfFragment:
+               print("Incorrect fragment title in line {}!".format(k))
+               break
+            else:
+               dictOfFragmentPitches[titleOfFragment] = fragmentPitches
+               dictOfFragmentDurations[titleOfFragment] = fragmentDurations
+               isFragment = 0
+               fragmentPitches = []
+               fragmentDurations = []
          #wywołanie fragmentu
          if parameters[0] == "Call":
             if parameters[1] not in dictOfFragmentPitches.values() or parameters[1] not in dictOfFragmentDurations.values():
@@ -140,6 +147,7 @@ def parseTxt(instrument, filepath):
                   fragmentDurations.append(y)
       else:
          print("Invalid number of parameters in line {}!".format(k))
+         break
    k = 0
    f.close()
    return phraseList
