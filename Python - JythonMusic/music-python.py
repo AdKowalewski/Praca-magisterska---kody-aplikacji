@@ -53,7 +53,8 @@ def parseTxt(instrument, filepath):
       k = k + 1
       #jeśli brak linii, wówczas zapamiętywanie ścieżki,
       #przerwanie pętli i opróżnianie list
-      if not line:
+      if not line or line[0] == ".":
+         print("End of the song")
          phrase.addNoteList(pitches, durations)
          phraseList.append(phrase)
          pitches = []
@@ -63,9 +64,6 @@ def parseTxt(instrument, filepath):
       #znak "#" lub "."
       if line[0] == "#":
          continue
-      if line[0] == ".":
-         print("End of the song")
-         break
       #podział linii względem ","
       parameters = line.split(",")
       if len(parameters) == 2:
