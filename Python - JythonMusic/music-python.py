@@ -118,17 +118,20 @@ def parseTxt(instrument, filepath):
                fragmentDurations = []
          #wywołanie fragmentu
          elif parameters[0] == "Call":
-            if parameters[1] not in dictOfFragmentPitches.values() or parameters[1] not in dictOfFragmentDurations.values():
+            if parameters[1] not in dictOfFragmentPitches.keys() or parameters[1] not in dictOfFragmentDurations.keys():
                print("Fragment of title {} in line {} does not exist!".format(parameters[1], k))
                break
             else:
                pitches.extend(dictOfFragmentPitches[parameters[1]])
                durations.extend(dictOfFragmentDurations[parameters[1]])
          else:
-            print("Incorrect first parameter in line {}!".format(k))
+            print("Incorrect first parameter {} in line {}!".format(parameters[0], k))
             break
       #dodanie nowej nuty
       elif len(parameters) == 3:
+         if parameters[0] not in noteLetters or parameters[1] not in octaves:
+            print("Note in line {} does not exist!".format(k))
+            break
          for n in noteLetters:
             if parameters[0] == n:
                for o in octaves:

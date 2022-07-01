@@ -128,7 +128,7 @@ public class TxtParser {
                         pattern += mapOfFragments.get(parameters[1]);
                     }
                 } else {
-                    System.out.printf("Incorrect first parameter in line %d!\n", k);
+                    System.out.printf("Incorrect first parameter %s in line %d!\n", parameters[0], k);
                     break;
                 }
             } else if(parameters.length == 3) {

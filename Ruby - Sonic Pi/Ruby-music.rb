@@ -1,20 +1,19 @@
-#tablica symboli nut
-noteLetters = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"]
-#tablica numerów oktaw
-octaves = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
-#słownik długości nut
-durationsDict = {
-  "1\n" => 4,
-  "1/2\n" => 2,
-  "1/4\n" => 1,
-  "1/8\n" => 0.5,
-  "1/16\n" => 0.25,
-  "1/32\n" => 0.125
-}
-
 #funkcja do tworzenia ścieżki muzycznej na podstawie
 #pliku z zapisem muzycznym oraz instrumentu
 def parseTxt(filepath, synth)
+  #tablica symboli nut
+  noteLetters = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"]
+  #tablica numerów oktaw
+  octaves = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+  #słownik długości nut
+  durationsDict = {
+    "1\n" => 4,
+    "1/2\n" => 2,
+    "1/4\n" => 1,
+    "1/8\n" => 0.5,
+    "1/16\n" => 0.25,
+    "1/32\n" => 0.125
+  }
   #ustawienie instrumentu
   use_synth synth
   #słownik fragmentów
@@ -86,7 +85,7 @@ def parseTxt(filepath, synth)
         smallList = []
       #wywołanie fragmentu
       elsif parameters[0] == "Call"
-        if fragmentDict.has_value?(parameters[1])
+        if fragmentDict.has_key?(parameters[1])
           fragmentDict[parameters[1]].each do |item|
             if item[0] == "Play"
               play item[1], release: 4
@@ -100,10 +99,14 @@ def parseTxt(filepath, synth)
           break
         end
       else
-        print "Incorrect first parameter in line #{k}!"
+        print "Incorrect first parameter #{parameters[0]} in line #{k}!"
         break
       end
     elsif parameters.length() == 3
+      if not noteLetters.include?(parameters[0]) or not octaves.include?(parameters[1])
+        print "Note in line #{k} does not exist!"
+        break
+      end
       #dodawanie nowej nuty (oraz pauzy potrzebnej
       #na wybrzmienie dźwięku)
       noteLetters.each do |n|
